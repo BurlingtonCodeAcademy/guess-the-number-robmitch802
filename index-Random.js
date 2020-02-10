@@ -2,7 +2,7 @@
 // started 2.5.20
 // due Monday, Feb. 10 by 9 a.m.
 // Written by Rob Mitchell
-// Binary search algorithm version 
+// Version using random guess generator
 
 //set the standard input 
 const readline = require('readline');
@@ -19,15 +19,12 @@ function guessGame() {
   async function start() {
     let rightGuess = null;
     //asks for an upper bound to the guessing range
-    maxRange = (await ask("To play I need a range of numbers to guess. How about \nbetween zero and your choice. How high can I guess?"))
-    //function that calculates the max number of guesses using binary search algorithm
-    //then console logs that for user
-    guessNum(maxRange);
+    maxRange = (await ask("Think of a number between zero and...what (this will give me an upper limit)?"))
     //starts while loop to run while condition is no correct guess
     while (rightGuess !== "y" || "yes") {
-      //to use binary search method, first guess will be median
-      //Then the guess re-sets to the new median between min and max range, rounding up
-      let numGuess = Math.round(maxRange - ((maxRange - minRange) / 2)); 
+      //sets initial guess via random integer creator function
+      //Then the guess re-sets to a new random integer between min and max range
+      let numGuess = randomInt(maxRange, minRange); 
       //starts guessing here 
       rightGuess = (await ask("Is it... " + numGuess + "? (Y/N)?")).trim().toLowerCase();
       //adds one to the guess count, in order to show number of guesses upon success
@@ -63,16 +60,7 @@ function ask(questionText) {
   });
 }
 
-//function to generate the projected max number of guesses 
-function guessNum(max) {
-  let topEnd = max;
-  let result = 0;
-  let guessCount = 1;
-  //uses worst case calculation for binary search algorithm max guesses
-  while (result <= topEnd) {
-    result = Math.pow(2, guessCount);
-    guessCount += 1;
-  }
-  console.log("Well... wtih that range, I should be able to guess your number in " + (guessCount - 1) + " guesses or less!");
-  //console.log(result)
+//random number generator
+function randomInt(max, min) {
+  return Math.floor(min + (Math.random() * (max - min + 1)))
 }
