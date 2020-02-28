@@ -18,23 +18,20 @@ function guessHuman() {
     async function start() {
         let rightGuess = null;
         //asks for an lower bound to the guessing range
-        let minRange = (await ask("Let's set a range for you to guess between. \nHow low can the number I pick be?")).trim();
+        let minRange = parseInt(await ask("Let's set a range for you to guess between. \nHow low can the number I pick be?"));
         //asks for the upper bound
-        let maxRange = (await ask("How high can the number be?"));
+        let maxRange = parseInt(await ask("How high can the number be?"));
         //repeats back the range
         console.log("Okay, I'm thinking of a number between " + minRange + " and " + maxRange + ".");
         //computer picks the number, assigned to randomNum
         let randomNum = randomInt(maxRange, minRange);
-        console.log(randomNum)
+        //console.log(randomNum)
         //starts the game by asking for the first guess
         let humGuess = (await ask("What's your first guess?"));
         //game loop starts, will run as long as human guess is incorrect
         while (humGuess !== randomNum) {
             //sets code for a guess outside the agreed-upon range
-            if (humGuess > maxRange) {
-                console.log("Hey pal - you're guessing outside the range we agreed to. See ya!");
-                process.exit();
-            } else if (humGuess < minRange) {
+            if (humGuess > maxRange || humGuess < minRange) {
                 console.log("Hey pal - you're guessing outside the range we agreed to. See ya!");
                 process.exit();
             } else if (randomNum > humGuess) { //clause for a guess higher than number

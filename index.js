@@ -8,23 +8,27 @@
 const readline = require('readline');
 const readlineInterface = readline.createInterface(process.stdin, process.stdout);
 
-// starts game using function
-function guessGame() {
-  let guessCount = 0; //Sets initial count for guesses
-  let maxRange = 100; //Sets initial max range for guessing
-  let minRange = 0; //Sets initial minimum range for guessing
-  //sets up user
+//initial variables
+let maxRange = 100; //Sets initial max range for guessing
+let minRange = 0; //Sets initial minimum range for guessing
+let guessCount = 0; //Sets initial count for guesses
+let rightGuess = null;
+
+//start function
+//sets up user
+//starts async function
+async function start() {
   console.log("Let's play a guessing game where you (human) \nmake up a number and I (computer) try to guess it!")
-  //starts async function
-  async function start() {
-    let rightGuess = null;
-    //asks for an upper bound to the guessing range
-    maxRange = (await ask("To play I need a range of numbers to guess. How about \nbetween zero and your choice. How high can I guess?"))
-    //function that calculates the max number of guesses using binary search algorithm
-    //then console logs that for user
+  //asks for an upper bound to the guessing range
+  maxRange = (await ask("To play I need a range of numbers to guess. How about \nbetween zero and your choice. How high can I guess?")).parseInt()
+  //function that calculates the max number of guesses using binary search algorithm
+  //then console logs that for user
+}
+
+function guessGame() {
     guessNum(maxRange);
     //starts while loop to run while condition is no correct guess
-    while (rightGuess !== "y" || "yes") {
+    while (rightGuess !== "y" && "yes") {
       //to use binary search method, first guess will be median
       //Then the guess re-sets to the new median between min and max range, rounding up
       let numGuess = Math.round(maxRange - ((maxRange - minRange) / 2)); 
@@ -33,7 +37,7 @@ function guessGame() {
       //adds one to the guess count, in order to show number of guesses upon success
       guessCount += 1;
       // response when (if) computer guesses correctly - yes, a little attitude
-      if (rightGuess === "y") {
+      if (rightGuess === "y" || "yes") {
         console.log("Haha! I got it in only " + guessCount + " guesses!")
         process.exit();
       } else { //Asks whether higher or lower
@@ -52,8 +56,9 @@ function guessGame() {
       }
     }
   }
-  start();
-}
+// starts game using function
+start();
+
 guessGame();
 
 //input function for async input
